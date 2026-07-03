@@ -1,5 +1,28 @@
 # 旧文件清理说明
 
+## ✅ 处理结果（2026-07-03 执行完毕）
+
+全部 38 个旧版扁平脚本已处理，`assets/scripts/` 根目录已清空，代码统一收归 `modules/` 等按域组织的目录。
+
+**第一批（26 个「已迁移」文件）**：确认对应新模块已实现后删除。
+
+**第二批（12 个「待迁移」文件）**：逐个读码评估后分类处理——
+
+- ✅ 迁移 6 个真实模块到新架构：
+  - `AudioManager` → `modules/audio/`（保留 Component，有 AudioClip/AudioSource 资源依赖）
+  - `AdSystem` → `modules/ads/`（改为纯 TS 单例，并修复 onClose 重复注册导致多次回调的 bug）
+  - `IAPSystem` → `modules/economy/`（改为纯 TS 单例）
+  - `ShareSystem` → `modules/social/`（改为纯 TS 单例）
+  - `MainMenuUI` → `modules/ui/`（保留 Component，有按钮节点依赖）
+  - `PerformanceMonitor` → `modules/monitoring/`（保留 Component，需每帧 update 采样）
+- 🗑 删除 6 个无价值文件：
+  - `GameTester`（空壳假测试，且引用已被删除的旧类 SkierController/GameManager 等）
+  - `SubmissionSystem` / `LaunchMonitor` / `StoreAssetsPreparation`（方法体几乎全为 console.log 占位）
+  - `TerrainGenerator`（Prefab + 定时器范式与新架构 gameLoop 的无尽生成冲突，迁移即孤儿）
+  - `CompatibilityTester`（设备判断逻辑已被 `utils/perf.ts` 的 `detectDeviceTier` 完整覆盖且更准确）
+
+> 以下为原始迁移映射，保留作为历史记录。
+
 ## 需要删除的旧文件
 
 以下文件是旧版扁平结构的产物，与新架构不兼容，建议删除：
