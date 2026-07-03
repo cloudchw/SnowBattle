@@ -1,0 +1,61 @@
+[
+  {
+    "__type__": "cc.Prefab",
+    "_name": "obstacle_cliff",
+    "data": {
+      "__id__": 1
+    },
+    "persistent": false
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "obstacle_cliff",
+    "_components": [
+      {
+        "__type__": "cc.Sprite",
+        "__id__": 2
+      },
+      {
+        "__type__": "cc.UITransform",
+        "__id__": 3
+      },
+      {
+        "__type__": "cc.BoxCollider2D",
+        "__id__": 4
+      }
+    ]
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_type": 0,
+    "_sizeMode": 2,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 139,
+      "g": 69,
+      "b": 19,
+      "a": 255
+    }
+  },
+  {
+    "__type__": "cc.UITransform",
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 100,
+      "height": 30
+    }
+  },
+  {
+    "__type__": "cc.BoxCollider2D",
+    "_size": {
+      "__type__": "cc.Size",
+      "width": 100,
+      "height": 30
+    },
+    "_offset": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    }
+  }
+]

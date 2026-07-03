@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "target": "ES2017",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "outDir": "./temp/scripts",
+    "rootDir": "./assets/scripts",
+    "baseUrl": ".",
+    "paths": {
+      "@types/*": ["assets/scripts/types/*"],
+      "@config/*": ["assets/scripts/config/*"],
+      "@core/*": ["assets/scripts/core/*"],
+      "@modules/*": ["assets/scripts/modules/*"],
+      "@utils/*": ["assets/scripts/utils/*"]
+    }
+  },
+  "include": [
+    "assets/scripts/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "temp"
+  ]
+}

@@ -1,0 +1,33 @@
+# Cocos Creator generated files
+build/
+library/
+local/
+temp/
+
+# Node modules
+node_modules/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local tooling data (do not version-control)
+.mimicode/
+.remember/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.local
+
+# Temporary files
+*.tmp
+*.temp

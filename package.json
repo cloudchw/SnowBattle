@@ -1,0 +1,38 @@
+{
+  "name": "snow-battle",
+  "version": "1.0.0",
+  "description": "滑雪大冒险 - 微信小游戏",
+  "scripts": {
+    "start": "cocos start",
+    "build": "cocos build",
+    "build:wechat": "cocos build --platform wechatgame",
+    "build:bytedance": "cocos build --platform bytedance-minigame",
+    "lint": "eslint assets/scripts/**/*.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=tests/unit",
+    "test:integration": "jest --testPathPattern=tests/integration",
+    "validate:levels": "node tools/level-validator/index.js"
+  },
+  "dependencies": {
+    "cocos-creator": "^3.8.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "@types/jest": "^29.0.0",
+    "ts-jest": "^29.0.0"
+  },
+  "author": "SnowBattle Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "creator": {
+    "version": "3.8.8"
+  },
+  "uuid": "7dd0e06c-9779-416b-92b6-186da0a170ab"
+}

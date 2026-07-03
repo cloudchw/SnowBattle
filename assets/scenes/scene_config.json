@@ -1,0 +1,31 @@
+{
+  "Boot": {
+    "name": "Boot",
+    "uuid": "boot_scene_uuid",
+    "autoReleaseAssets": false,
+    "globals": {
+      "ambient": {
+        "skyColor": [128, 128, 128, 255],
+        "groundAlbedo": [51, 51, 51, 255]
+      }
+    }
+  },
+  "Main": {
+    "name": "Main",
+    "uuid": "main_scene_uuid",
+    "autoReleaseAssets": false,
+    "nodes": [
+      {
+        "name": "Canvas",
+        "uuid": "canvas_uuid",
+        "components": ["cc.Canvas"]
+      },
+      {
+        "name": "GameApp",
+        "uuid": "gameapp_uuid",
+        "components": ["GameApp"],
+        "children": ["LevelSystem", "PlayerSystem", "ObstacleSystem", "WeatherSystem", "CollectibleSystem", "PowerUpSystem", "ScoringSystem", "CharacterSystem", "InputSystem", "UIFramework"]
+      }
+    ]
+  }
+}

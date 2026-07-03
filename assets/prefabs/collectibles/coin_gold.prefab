@@ -1,0 +1,57 @@
+[
+  {
+    "__type__": "cc.Prefab",
+    "_name": "coin_gold",
+    "data": {
+      "__id__": 1
+    },
+    "persistent": false
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "coin_gold",
+    "_components": [
+      {
+        "__type__": "cc.Sprite",
+        "__id__": 2
+      },
+      {
+        "__type__": "cc.UITransform",
+        "__id__": 3
+      },
+      {
+        "__type__": "cc.CircleCollider2D",
+        "__id__": 4
+      }
+    ]
+  },
+  {
+    "__type__": "cc.Sprite",
+    "_type": 0,
+    "_sizeMode": 2,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 255,
+      "g": 215,
+      "b": 0,
+      "a": 255
+    }
+  },
+  {
+    "__type__": "cc.UITransform",
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 20,
+      "height": 20
+    }
+  },
+  {
+    "__type__": "cc.CircleCollider2D",
+    "_radius": 10,
+    "_offset": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": 0
+    }
+  }
+]

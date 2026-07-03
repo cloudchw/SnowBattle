@@ -1,0 +1,20 @@
+{
+  "general": {
+    "designResolution": {
+      "width": 1920,
+      "height": 1080
+    },
+    "fitWidth": false,
+    "fitHeight": true
+  },
+  "physics": {
+    "enable2D": true,
+    "enable3D": false
+  },
+  "platform": {
+    "wechatgame": {
+      "appid": "",
+      "remoteServerAddress": ""
+    }
+  }
+}

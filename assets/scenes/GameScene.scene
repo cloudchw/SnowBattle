@@ -1,0 +1,145 @@
+{
+  "version": "3.8.0",
+  "name": "GameScene",
+  "autoReleaseAssets": false,
+  "ambient": {
+    "skyColor": [0.2, 0.2, 0.2, 1],
+    "groundAlbedo": [0.2, 0.2, 0.2, 1],
+    "skyIllum": 20000
+  },
+  "fog": {
+    "enabled": false,
+    "fogColor": [0.5, 0.5, 0.5, 1],
+    "fogType": 0,
+    "fogDensity": 0.3,
+    "fogStart": 0.5,
+    "fogEnd": 300
+  },
+  "nodes": [
+    {
+      "name": "Canvas",
+      "uuid": "canvas-node-uuid",
+      "components": [
+        {
+          "type": "cc.Canvas",
+          "properties": {
+            "designResolution": {
+              "width": 1920,
+              "height": 1080
+            },
+            "fitWidth": false,
+            "fitHeight": true
+          }
+        }
+      ],
+      "children": [
+        {
+          "name": "Camera",
+          "uuid": "camera-node-uuid",
+          "components": [
+            {
+              "type": "cc.Camera",
+              "properties": {
+                "projection": 0,
+                "priority": 0,
+                "fov": 45,
+                "orthoHeight": 10,
+                "near": 1,
+                "far": 2000,
+                "color": [0, 0, 0, 255],
+                "depth": 1,
+                "stencil": 0,
+                "clearFlags": 6,
+                "rect": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 1,
+                  "height": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Skier",
+          "uuid": "skier-node-uuid",
+          "components": [
+            {
+              "type": "cc.Sprite",
+              "properties": {
+                "color": [255, 255, 255, 255],
+                "type": 0,
+                "sizeMode": 0,
+                "fillType": 0,
+                "isTrimmedMode": true
+              }
+            },
+            {
+              "type": "SkierController",
+              "properties": {
+                "speed": 10,
+                "jumpForce": 15,
+                "diveForce": 10
+              }
+            },
+            {
+              "type": "cc.BoxCollider2D",
+              "properties": {
+                "offset": {
+                  "x": 0,
+                  "y": 0
+                },
+                "size": {
+                  "width": 100,
+                  "height": 100
+                }
+              }
+            }
+          ],
+          "position": [0, 0, 0]
+        },
+        {
+          "name": "GameManager",
+          "uuid": "gamemanager-node-uuid",
+          "components": [
+            {
+              "type": "GameManager",
+              "properties": {
+                "gameSpeed": 5,
+                "maxSpeed": 20,
+                "speedIncrement": 0.1
+              }
+            }
+          ]
+        },
+        {
+          "name": "ObstacleSpawner",
+          "uuid": "obstaclespawner-node-uuid",
+          "components": [
+            {
+              "type": "ObstacleSpawner",
+              "properties": {
+                "spawnInterval": 2,
+                "spawnRangeX": 8
+              }
+            }
+          ]
+        },
+        {
+          "name": "CollisionDetector",
+          "uuid": "collisiondetector-node-uuid",
+          "components": [
+            {
+              "type": "CollisionDetector",
+              "properties": {
+                "gameManager": {
+                  "__id__": 3
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

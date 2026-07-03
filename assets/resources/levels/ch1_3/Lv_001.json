@@ -1,0 +1,50 @@
+{
+  "id": "Lv_001",
+  "name": "初学者雪道",
+  "chapter": 1,
+  "terrain": "beginner_snow",
+  "mode": "level",
+  "weather": {
+    "type": "clear",
+    "visibility": 1.0,
+    "speedMod": 1.0,
+    "controlMod": 1.0,
+    "windForce": 0,
+    "windDir": 0
+  },
+  "obstacles": [
+    { "type": "tree", "position": [300, 200], "state": "normal" },
+    { "type": "tree", "position": [500, 150], "state": "normal" },
+    { "type": "snow_pile", "position": [700, 180], "state": "normal" },
+    { "type": "tree", "position": [900, 220], "state": "normal" },
+    { "type": "snow_pile", "position": [1100, 160], "state": "normal" },
+    { "type": "tree", "position": [1300, 190], "state": "normal" },
+    { "type": "cliff", "position": [1500, 100], "state": "warning" },
+    { "type": "tree", "position": [1700, 210], "state": "normal" },
+    { "type": "snow_pile", "position": [1900, 170], "state": "normal" },
+    { "type": "tree", "position": [2100, 200], "state": "normal" }
+  ],
+  "collectibles": {
+    "coins": {
+      "count": 15,
+      "pattern": "line"
+    },
+    "powerups": [
+      { "type": "shield", "position": [600, 120] }
+    ]
+  },
+  "goals": {
+    "primary": "reach_end",
+    "secondary": {
+      "distance": 2500,
+      "time_limit": 60
+    }
+  },
+  "stars_threshold": {
+    "time_3star": 30,
+    "time_2star": 45,
+    "coins_3star": 12,
+    "coins_2star": 8
+  },
+  "difficulty": 0.1
+}

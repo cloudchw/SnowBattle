@@ -1,0 +1,46 @@
+export const BALANCE = {
+  PLAYER: {
+    BASE_SPEED: 200,
+    MAX_SPEED: 600,
+    JUMP_HEIGHT: 150,
+    JUMP_DURATION: 600,
+    DIVE_SPEED: 400,
+    DIVE_DURATION: 300,
+    BRAKE_DECEL: 0.5,
+    BOOST_ACCEL: 1.5,
+    BOOST_DURATION: 2000,
+    INVINCIBLE_DURATION: 1500,
+    COYOTE_TIME: 100,
+  },
+  OBSTACLE: {
+    WARNING_DISTANCE: 200,
+    DANGER_DISTANCE: 100,
+    BASE_SPACING: 200,
+    MIN_SPACING: 80,
+    SPACING_DECAY_PER_1000M: 10,
+    PERFECT_DODGE_DISTANCE: 10,
+  },
+  SCORING: {
+    DISTANCE_SCORE: 1,
+    COIN_SCORE: 10,
+    PERFECT_DODGE_SCORE: 50,
+    POWERUP_USE_SCORE: 20,
+    COMBO_MULTIPLIER: 0.1,
+  },
+  WEATHER: {
+    CHANGE_INTERVAL_MIN: 30000,
+    CHANGE_INTERVAL_MAX: 60000,
+  },
+  COOLDOWNS: {
+    JUMP: 800,
+    DIVE: 600,
+    BRAKE: 2000,
+    BOOST: 3000,
+  },
+  TUTORIAL: {
+    OPEN_GESTURES_1_3: ['jump', 'move_left', 'move_right'],
+    OPEN_GESTURES_4_6: ['jump', 'move_left', 'move_right', 'dive'],
+    OPEN_GESTURES_7_10: ['jump', 'move_left', 'move_right', 'dive', 'brake', 'boost'],
+    OPEN_GESTURES_11_PLUS: ['jump', 'move_left', 'move_right', 'dive', 'brake', 'boost'],
+  },
+} as const;
