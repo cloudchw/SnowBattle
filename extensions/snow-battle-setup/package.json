@@ -1,0 +1,19 @@
+{
+  "name": "snow-battle-setup",
+  "version": "1.0.0",
+  "description": "SnowBattle 一键搭建 Boot 场景（GameApp + 10 个子系统 + 组件绑定）",
+  "main": "./main.js",
+  "author": "Claude",
+  "editor": ">=3.8.0",
+  "contributions": {
+    "scene": {
+      "script": "./scene-setup.js"
+    },
+    "menu": [
+      { "path": "SnowBattle/搭建 Boot 场景", "message": "setup-boot-scene" }
+    ],
+    "messages": {
+      "setup-boot-scene": { "methods": ["setupBootScene"] }
+    }
+  }
+}
