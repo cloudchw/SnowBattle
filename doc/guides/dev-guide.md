@@ -170,5 +170,5 @@ A: 需要在编辑器中手动创建节点和组件。
 
 - [Cocos Creator 3.8 文档](https://docs.cocos.com/creator/3.8/manual/zh/)
 - [微信小游戏开发指南](https://developers.weixin.qq.com/minigame/dev/guide/)
-- [项目架构文档](ARCHITECTURE.md)
-- [产品需求文档](PRD.md)
+- [项目架构文档](../design/architecture.md)
+- [产品需求文档](../product/prd.md)
