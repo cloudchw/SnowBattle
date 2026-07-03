@@ -1,20 +1,20 @@
 import { _decorator, Component, director, Node } from 'cc';
-import { eventBus, GameEvent } from '@core/EventBus';
-import { scheduler } from '@core/Scheduler';
-import { LevelSystem } from '@modules/level/LevelSystem';
-import { PlayerSystem } from '@modules/player/PlayerSystem';
-import { ObstacleSystem } from '@modules/obstacle/ObstacleSystem';
-import { WeatherSystem } from '@modules/weather/WeatherSystem';
-import { CollectibleSystem } from '@modules/collectible/CollectibleSystem';
-import { PowerUpSystem } from '@modules/powerup/PowerUpSystem';
-import { ScoringSystem } from '@modules/scoring/ScoringSystem';
-import { CharacterSystem } from '@modules/character/CharacterSystem';
-import { InputSystem } from '@modules/input/InputSystem';
-import { UIFramework } from '@modules/ui/UIFramework';
-import { cloudBridge } from '@modules/cloud/CloudBridge';
-import { analyticsService } from '@modules/analytics/AnalyticsService';
-import { detectDeviceTier } from '@utils/perf';
-import { BALANCE } from '@config/balance';
+import { eventBus, GameEvent } from './EventBus';
+import { scheduler } from './Scheduler';
+import { LevelSystem } from '../modules/level/LevelSystem';
+import { PlayerSystem } from '../modules/player/PlayerSystem';
+import { ObstacleSystem } from '../modules/obstacle/ObstacleSystem';
+import { WeatherSystem } from '../modules/weather/WeatherSystem';
+import { CollectibleSystem } from '../modules/collectible/CollectibleSystem';
+import { PowerUpSystem } from '../modules/powerup/PowerUpSystem';
+import { ScoringSystem } from '../modules/scoring/ScoringSystem';
+import { CharacterSystem } from '../modules/character/CharacterSystem';
+import { InputSystem } from '../modules/input/InputSystem';
+import { UIFramework } from '../modules/ui/UIFramework';
+import { cloudBridge } from '../modules/cloud/CloudBridge';
+import { analyticsService } from '../modules/analytics/AnalyticsService';
+import { detectDeviceTier } from '../utils/perf';
+import { BALANCE } from '../config/balance';
 
 const { ccclass, property } = _decorator;
 

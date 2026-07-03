@@ -1,5 +1,5 @@
 import { _decorator, Component } from 'cc';
-import { PowerUpType, POWERUP_SPECS } from '@types/powerup';
+import { PowerUpType, POWERUP_SPECS } from '../../types/powerup';
 import { PowerUpState, ActivePowerUp, powerupReducer, PowerUpAction } from './powerupReducer';
 
 const { ccclass, property } = _decorator;

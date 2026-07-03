@@ -1,4 +1,4 @@
-import { PowerUpType, POWERUP_SPECS } from '@types/powerup';
+import { PowerUpType, POWERUP_SPECS } from '../../types/powerup';
 
 export type ActivePowerUp = {
   readonly type: PowerUpType;

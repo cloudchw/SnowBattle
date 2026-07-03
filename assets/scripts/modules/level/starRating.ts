@@ -1,4 +1,4 @@
-import { LevelConfig } from '@types/level';
+import { LevelConfig } from '../../types/level';
 
 export function rateStars(
   config: LevelConfig,

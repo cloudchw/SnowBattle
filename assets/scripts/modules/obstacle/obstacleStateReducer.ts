@@ -1,5 +1,5 @@
-import { ObstacleRuntime, ObstacleState } from '@types/obstacle';
-import { BALANCE } from '@config/balance';
+import { ObstacleRuntime, ObstacleState } from '../../types/obstacle';
+import { BALANCE } from '../../config/balance';
 
 export function updateObstacleState(
   obstacle: ObstacleRuntime,

@@ -1,9 +1,9 @@
 import { _decorator, Component, Node, Prefab, instantiate, Vec2 as CocosVec2 } from 'cc';
-import { ObstacleType, ObstacleState, ObstacleConfig, ObstacleRuntime } from '@types/obstacle';
-import { BALANCE } from '@config/balance';
-import { Pool } from '@core/Pool';
-import { Rect, vec2, vec2Distance, Vec2 } from '@utils/math';
-import { RNG } from '@utils/rng';
+import { ObstacleType, ObstacleState, ObstacleConfig, ObstacleRuntime } from '../../types/obstacle';
+import { BALANCE } from '../../config/balance';
+import { Pool } from '../../core/Pool';
+import { Rect, vec2, vec2Distance, Vec2 } from '../../utils/math';
+import { RNG } from '../../utils/rng';
 
 const { ccclass, property } = _decorator;
 

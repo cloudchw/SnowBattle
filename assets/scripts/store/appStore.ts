@@ -1,5 +1,5 @@
-import { PlayerSave } from '@types/player';
-import { LevelConfig } from '@types/level';
+import { PlayerSave } from '../types/player';
+import { LevelConfig } from '../types/level';
 
 export type AppAction =
   | { type: 'SET_PLAYER'; player: PlayerSave }

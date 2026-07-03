@@ -1,4 +1,4 @@
-import { AnalyticsEvent } from '@types/analytics';
+import { AnalyticsEvent } from '../../types/analytics';
 
 export function validateAnalyticsEvent(event: any): event is AnalyticsEvent {
   if (!event || typeof event !== 'object') return false;

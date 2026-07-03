@@ -1,4 +1,4 @@
-import { ObstacleType } from '@types/obstacle';
+import { ObstacleType } from '../../types/obstacle';
 
 export type TerrainType = 'snow' | 'ice' | 'uphill' | 'downhill' | 'hot_spring';
 

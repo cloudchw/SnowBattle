@@ -1,4 +1,4 @@
-import { LevelConfig, FailReason } from '@types/level';
+import { LevelConfig, FailReason } from '../../types/level';
 
 export type LevelPhase = 'loading' | 'ready' | 'playing' | 'paused' | 'result';
 

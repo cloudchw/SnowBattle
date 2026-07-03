@@ -1,9 +1,9 @@
 import { _decorator, Component, Vec2 as CocosVec2 } from 'cc';
-import { PlayerState, PlayerAction } from '@types/player';
-import { CharacterType, CHARACTER_STATS } from '@types/character';
-import { BALANCE } from '@config/balance';
-import { eventBus, GameEvent } from '@core/EventBus';
-import { clamp } from '@utils/math';
+import { PlayerState, PlayerAction } from '../../types/player';
+import { CharacterType, CHARACTER_STATS } from '../../types/character';
+import { BALANCE } from '../../config/balance';
+import { eventBus, GameEvent } from '../../core/EventBus';
+import { clamp } from '../../utils/math';
 
 const { ccclass, property } = _decorator;
 

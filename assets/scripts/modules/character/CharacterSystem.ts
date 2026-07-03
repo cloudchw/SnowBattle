@@ -1,6 +1,6 @@
 import { _decorator, Component } from 'cc';
-import { CharacterType, CharacterStats, CHARACTER_STATS } from '@types/character';
-import { PlayerSave } from '@types/player';
+import { CharacterType, CharacterStats, CHARACTER_STATS } from '../../types/character';
+import { PlayerSave } from '../../types/player';
 
 const { ccclass, property } = _decorator;
 

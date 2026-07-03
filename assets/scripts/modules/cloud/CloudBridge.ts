@@ -1,6 +1,6 @@
-import { LevelResult } from '@types/level';
-import { PlayerSave } from '@types/player';
-import { AnalyticsEvent } from '@types/analytics';
+import { LevelResult } from '../../types/level';
+import { PlayerSave } from '../../types/player';
+import { AnalyticsEvent } from '../../types/analytics';
 
 export interface RankEntry {
   uid: string;

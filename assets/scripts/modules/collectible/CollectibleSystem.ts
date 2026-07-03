@@ -1,8 +1,8 @@
 import { _decorator, Component } from 'cc';
-import { PowerUpType } from '@types/powerup';
-import { vec2, Vec2, vec2Distance } from '@utils/math';
-import { RNG } from '@utils/rng';
-import { BALANCE } from '@config/balance';
+import { PowerUpType } from '../../types/powerup';
+import { vec2, Vec2, vec2Distance } from '../../utils/math';
+import { RNG } from '../../utils/rng';
+import { BALANCE } from '../../config/balance';
 
 const { ccclass, property } = _decorator;
 

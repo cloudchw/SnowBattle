@@ -1,4 +1,4 @@
-import { BALANCE } from '@config/balance';
+import { BALANCE } from '../../config/balance';
 
 export function calculateComboMultiplier(comboCount: number): number {
   return 1.0 + comboCount * BALANCE.SCORING.COMBO_MULTIPLIER;

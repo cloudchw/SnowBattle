@@ -1,4 +1,4 @@
-import { AnalyticsEvent } from '@types/analytics';
+import { AnalyticsEvent } from '../../types/analytics';
 
 export type FunnelNode = 'launch' | 'loaded' | 'tutorial' | 'lv1' | 'lv5' | 'lv10' | 'lv20';
 

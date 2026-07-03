@@ -1,5 +1,5 @@
-import { ObstacleRuntime } from '@types/obstacle';
-import { Rect } from '@utils/math';
+import { ObstacleRuntime } from '../../types/obstacle';
+import { Rect } from '../../utils/math';
 
 export type CollisionResult =
   | { hit: false }

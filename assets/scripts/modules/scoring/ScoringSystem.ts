@@ -1,7 +1,7 @@
 import { _decorator, Component } from 'cc';
 import { ScoringState, ScoringAction } from './scoreReducer';
-import { BALANCE } from '@config/balance';
-import { eventBus, GameEvent } from '@core/EventBus';
+import { BALANCE } from '../../config/balance';
+import { eventBus, GameEvent } from '../../core/EventBus';
 
 const { ccclass, property } = _decorator;
 

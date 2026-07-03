@@ -1,8 +1,8 @@
 import { _decorator, Component, resources, JsonAsset } from 'cc';
-import { LevelConfig, LevelResult, FailReason } from '@types/level';
+import { LevelConfig, LevelResult, FailReason } from '../../types/level';
 import { LevelState, LevelPhase, LevelAction, levelReducer } from './levelReducer';
 import { rateStars } from './starRating';
-import { eventBus, GameEvent } from '@core/EventBus';
+import { eventBus, GameEvent } from '../../core/EventBus';
 
 const { ccclass, property } = _decorator;
 

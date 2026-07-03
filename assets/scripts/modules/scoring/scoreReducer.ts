@@ -1,4 +1,4 @@
-import { BALANCE } from '@config/balance';
+import { BALANCE } from '../../config/balance';
 
 export type ScoringState = {
   readonly score: number;

@@ -1,4 +1,4 @@
-import { WeatherType, WeatherConfig, WEATHER_CONFIGS } from '@types/weather';
+import { WeatherType, WeatherConfig, WEATHER_CONFIGS } from '../../types/weather';
 
 export function getSpeedModifier(weather: WeatherType): number {
   return WEATHER_CONFIGS[weather].speedMod;

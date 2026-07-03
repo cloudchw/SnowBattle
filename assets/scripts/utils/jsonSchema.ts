@@ -1,4 +1,4 @@
-import { LevelConfig } from '@types/level';
+import { LevelConfig } from '../types/level';
 
 const LEVEL_SCHEMA = {
   type: 'object',

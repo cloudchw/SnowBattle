@@ -1,6 +1,6 @@
 import { _decorator, Component } from 'cc';
-import { WeatherType, WeatherConfig, WEATHER_CONFIGS } from '@types/weather';
-import { eventBus, GameEvent } from '@core/EventBus';
+import { WeatherType, WeatherConfig, WEATHER_CONFIGS } from '../../types/weather';
+import { eventBus, GameEvent } from '../../core/EventBus';
 
 const { ccclass, property } = _decorator;
 

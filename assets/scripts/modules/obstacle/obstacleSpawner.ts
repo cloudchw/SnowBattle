@@ -1,5 +1,5 @@
-import { ObstacleType } from '@types/obstacle';
-import { BALANCE } from '@config/balance';
+import { ObstacleType } from '../../types/obstacle';
+import { BALANCE } from '../../config/balance';
 
 export function shouldSpawnObstacle(
   lastSpawnX: number,

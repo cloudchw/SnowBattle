@@ -1,5 +1,5 @@
-import { AnalyticsEvent } from '@types/analytics';
-import { cloudBridge } from '@modules/cloud/CloudBridge';
+import { AnalyticsEvent } from '../../types/analytics';
+import { cloudBridge } from '../cloud/CloudBridge';
 
 export class AnalyticsService {
   private static instance: AnalyticsService;

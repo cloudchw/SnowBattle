@@ -1,6 +1,6 @@
-import { PlayerState, PlayerAction, PlayerPhase } from '@types/player';
-import { BALANCE } from '@config/balance';
-import { clamp } from '@utils/math';
+import { PlayerState, PlayerAction, PlayerPhase } from '../../types/player';
+import { BALANCE } from '../../config/balance';
+import { clamp } from '../../utils/math';
 
 export function playerReducer(state: PlayerState, action: PlayerAction): PlayerState {
   switch (action.type) {
