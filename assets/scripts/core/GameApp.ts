@@ -11,8 +11,13 @@ import { ScoringSystem } from '../modules/scoring/ScoringSystem';
 import { CharacterSystem } from '../modules/character/CharacterSystem';
 import { InputSystem } from '../modules/input/InputSystem';
 import { UIFramework } from '../modules/ui/UIFramework';
+import { AudioManager } from '../modules/audio/AudioManager';
+import { GameRenderer } from '../modules/render/GameRenderer';
 import { cloudBridge } from '../modules/cloud/CloudBridge';
 import { analyticsService } from '../modules/analytics/AnalyticsService';
+import { adSystem } from '../modules/ads/AdSystem';
+import { iapSystem } from '../modules/economy/IAPSystem';
+import { shareSystem } from '../modules/social/ShareSystem';
 import { detectDeviceTier } from '../utils/perf';
 import { BALANCE } from '../config/balance';
 
@@ -30,6 +35,8 @@ export class GameApp extends Component {
   @property(CharacterSystem) characterSystem: CharacterSystem = null!;
   @property(InputSystem) inputSystem: InputSystem = null!;
   @property(UIFramework) uiFramework: UIFramework = null!;
+  @property(AudioManager) audioManager: AudioManager = null!;
+  @property(GameRenderer) renderer: GameRenderer = null!;
 
   private deviceTier = detectDeviceTier();
   private isPlaying: boolean = false;
@@ -42,11 +49,28 @@ export class GameApp extends Component {
     await cloudBridge.login();
     analyticsService.funnel('launch');
 
+    this.setupExternalServices();
     this.setupEventListeners();
     this.setupInputHandlers();
 
     scheduler.setFixedStep(1000 / 60);
     scheduler.onUpdate(this.gameLoop.bind(this));
+  }
+
+  /**
+   * 初始化商业化 / 社交单例服务，并启动背景音乐。
+   * wx 不可用时各服务内部 fallback，不会阻塞浏览器预览。
+   */
+  private setupExternalServices(): void {
+    adSystem.configure({
+      rewardedAdUnitId: '',      // TODO: 上线前填入真实激励视频广告位 ID
+      interstitialAdUnitId: '',  // TODO: 上线前填入真实插屏广告位 ID
+    });
+    iapSystem.setProducts([]);   // TODO: 上线前填入商品列表
+    shareSystem.configure({ title: '滑雪大冒险', imageUrl: '' });
+    shareSystem.setupShareMenu();
+
+    this.audioManager?.playBackgroundMusic();
   }
 
   start() {
@@ -68,9 +92,11 @@ export class GameApp extends Component {
       switch (gesture.direction) {
         case 'up':
           this.playerSystem.applyInput({ type: 'JUMP' });
+          this.audioManager?.playJumpSound();
           break;
         case 'down':
           this.playerSystem.applyInput({ type: 'DIVE' });
+          this.audioManager?.playDiveSound();
           break;
         case 'left':
           this.playerSystem.applyInput({ type: 'MOVE_LEFT' });
@@ -91,17 +117,25 @@ export class GameApp extends Component {
     this.scoringSystem.reset();
     this.powerupSystem.reset();
 
-    await this.levelSystem.startLevel(levelId);
+    try {
+      await this.levelSystem.startLevel(levelId);
+      console.log('[GameApp] levelSystem.startLevel 完成');
+    } catch (e) {
+      console.error('[GameApp] levelSystem.startLevel 失败:', e);
+    }
 
     const levelState = this.levelSystem.getState();
     if (levelState) {
       this.obstacleSystem.initFromConfig(levelState.config.obstacles);
       this.collectibleSystem.initFromConfig(levelState.config.collectibles);
       this.weatherSystem.init(levelState.config.weather);
+    } else {
+      console.warn('[GameApp] levelState=null，关卡数据未加载，靠 endless 生成');
     }
 
     this.isPlaying = true;
     scheduler.start();
+    console.log('[GameApp] startLevel 完成, isPlaying=true, renderer绑定=' + (!!this.renderer));
   }
 
   startEndless(): void {
@@ -119,6 +153,11 @@ export class GameApp extends Component {
 
     this.isPlaying = true;
     scheduler.start();
+  }
+
+  /** Cocos 每帧生命周期回调：驱动固定步长调度器（dt 秒 → 毫秒）*/
+  update(dt: number): void {
+    scheduler.tick(dt * 1000);
   }
 
   private gameLoop(dt: number): void {
@@ -166,6 +205,7 @@ export class GameApp extends Component {
     if (collectionResult.powerup) {
       this.powerupSystem.collect(collectionResult.powerup);
       this.scoringSystem.onPowerUpUsed();
+      this.audioManager?.playPowerUpSound();
     }
 
     this.comboTimer += dt;
@@ -177,10 +217,20 @@ export class GameApp extends Component {
     this.uiFramework.updateHUD(this.levelSystem.getState()!, this.scoringSystem.getState());
     this.uiFramework.setDistance(this.distanceTraveled);
     this.uiFramework.setWeather(this.weatherSystem.current().type);
+
+    // 视觉层：把玩家/障碍/金币/道具画到屏幕
+    this.renderer?.render(
+      playerX,
+      playerY,
+      this.obstacleSystem.getObstacles(),
+      this.collectibleSystem.getCoins(),
+      this.collectibleSystem.getPowerups(),
+    );
   }
 
   private onPlayerHit(damage: number): void {
     console.log('Player hit:', damage);
+    this.audioManager?.playCollisionSound();
   }
 
   private onPlayerDead(cause: string): void {
@@ -191,6 +241,7 @@ export class GameApp extends Component {
 
   private onCoinCollected(count: number, total: number): void {
     this.comboTimer = 0;
+    this.audioManager?.playCoinSound();
   }
 
   private onLevelComplete(result: any): void {

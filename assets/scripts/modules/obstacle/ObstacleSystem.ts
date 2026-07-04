@@ -120,6 +120,10 @@ export class ObstacleSystem extends Component {
     return count;
   }
 
+  getObstacles(): ReadonlyArray<ObstacleRuntime> {
+    return this.obstacles;
+  }
+
   clear(): void {
     this.obstacles.forEach(obs => this.pool.release(obs));
     this.obstacles = [];

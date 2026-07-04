@@ -24,7 +24,7 @@
     ],
     "transformToolName": "position",
     "pivot": "pivot",
-    "coordinate": "local",
+    "coordinate": "global",
     "toolsVisibility3d": true
   },
   "snap-configs": {
@@ -171,9 +171,9 @@
     },
     "0ee8f393-cd20-4209-aa21-5fddbaaf0875": {
       "position": {
-        "x": 12.159981953245932,
-        "y": 12.159981953245932,
-        "z": 12.159981953245932
+        "x": 17.258385165279265,
+        "y": 17.258385165279265,
+        "z": 17.258385165279257
       },
       "rotation": {
         "x": -0.27984814233312133,
@@ -189,8 +189,8 @@
       "contentRect": {
         "x": 0,
         "y": 0,
-        "width": 1128,
-        "height": 1180
+        "width": 521,
+        "height": 590
       },
       "scale": 1
     }
@@ -223,5 +223,18 @@
     "iso": 0,
     "aperture": 19,
     "shutter": 7
+  },
+  "float-window": {
+    "position": {
+      "cc": {
+        "Camera": {
+          "dock": false,
+          "top": null,
+          "bottom": 10,
+          "left": null,
+          "right": 10
+        }
+      }
+    }
   }
 }

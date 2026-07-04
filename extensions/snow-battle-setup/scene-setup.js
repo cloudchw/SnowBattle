@@ -9,16 +9,18 @@ const { Node, director, Canvas } = require('cc');
 // [组件类名(@ccclass), GameApp 上对应的 @property 字段]
 // 与 assets/scripts/core/GameApp.ts 的 @property 声明一一对应。
 const SYSTEMS = [
-  ['LevelSystem',     'levelSystem'],
-  ['PlayerSystem',    'playerSystem'],
-  ['ObstacleSystem',  'obstacleSystem'],
-  ['WeatherSystem',   'weatherSystem'],
+  ['LevelSystem',      'levelSystem'],
+  ['PlayerSystem',     'playerSystem'],
+  ['ObstacleSystem',   'obstacleSystem'],
+  ['WeatherSystem',    'weatherSystem'],
   ['CollectibleSystem','collectibleSystem'],
-  ['PowerUpSystem',   'powerupSystem'],
-  ['ScoringSystem',   'scoringSystem'],
-  ['CharacterSystem', 'characterSystem'],
-  ['InputSystem',     'inputSystem'],
-  ['UIFramework',     'uiFramework'],
+  ['PowerUpSystem',    'powerupSystem'],
+  ['ScoringSystem',    'scoringSystem'],
+  ['CharacterSystem',  'characterSystem'],
+  ['InputSystem',      'inputSystem'],
+  ['UIFramework',      'uiFramework'],
+  ['AudioManager',     'audioManager'],
+  ['GameRenderer',     'renderer'],
 ];
 
 exports.methods = {
@@ -65,6 +67,14 @@ exports.methods = {
         warnings.push(`绑定 GameApp.${prop} 失败: ${(e && e.message) || e}`);
       }
       created.push(cls);
+    }
+
+    // PerformanceMonitor：独立监控组件，挂在 Canvas 下自行 update，不绑定到 GameApp
+    let perfNode = canvas.getChildByName('PerformanceMonitor');
+    if (!perfNode) { perfNode = new Node('PerformanceMonitor'); perfNode.parent = canvas; }
+    if (!perfNode.getComponent('PerformanceMonitor')) {
+      try { perfNode.addComponent('PerformanceMonitor'); created.push('PerformanceMonitor'); }
+      catch (e) { warnings.push(`addComponent('PerformanceMonitor') 失败: ${(e && e.message) || e}`); }
     }
 
     return JSON.stringify({ ok: true, scene: scene.name, created, warnings });

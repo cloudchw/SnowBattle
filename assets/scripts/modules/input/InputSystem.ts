@@ -1,4 +1,4 @@
-import { _decorator, Component, EventTouch, Touch, Vec2 as CocosVec2 } from 'cc';
+import { _decorator, Component, EventTouch, Touch, input, Input, Vec2 as CocosVec2 } from 'cc';
 import { GestureResult } from './gestureRecognizer';
 
 const { ccclass, property } = _decorator;
@@ -9,24 +9,25 @@ export type GestureCallback = (gesture: GestureResult) => void;
 export class InputSystem extends Component {
   private gestureCallbacks: GestureCallback[] = [];
   private enabled: boolean = true;
-  private allowedGestures: Set<string> = new Set(['jump', 'move_left', 'move_right']);
+  private allowedGestures: Set<string> = new Set(['up', 'down', 'left', 'right']);
 
   private touchStartPos: CocosVec2 = new CocosVec2();
   private touchStartTime: number = 0;
   private isTracking: boolean = false;
 
   onLoad() {
-    this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
-    this.node.on(Node.EventType.TOUCH_MOVE, this.onTouchMove, this);
-    this.node.on(Node.EventType.TOUCH_END, this.onTouchEnd, this);
-    this.node.on(Node.EventType.TOUCH_CANCEL, this.onTouchCancel, this);
+    // 全局触摸：不依赖节点 UITransform，整个屏幕都能接收手势
+    input.on(Input.EventType.TOUCH_START, this.onTouchStart, this);
+    input.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
+    input.on(Input.EventType.TOUCH_END, this.onTouchEnd, this);
+    input.on(Input.EventType.TOUCH_CANCEL, this.onTouchCancel, this);
   }
 
   onDestroy() {
-    this.node.off(Node.EventType.TOUCH_START, this.onTouchStart, this);
-    this.node.off(Node.EventType.TOUCH_MOVE, this.onTouchMove, this);
-    this.node.off(Node.EventType.TOUCH_END, this.onTouchEnd, this);
-    this.node.off(Node.EventType.TOUCH_CANCEL, this.onTouchCancel, this);
+    input.off(Input.EventType.TOUCH_START, this.onTouchStart, this);
+    input.off(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
+    input.off(Input.EventType.TOUCH_END, this.onTouchEnd, this);
+    input.off(Input.EventType.TOUCH_CANCEL, this.onTouchCancel, this);
   }
 
   onGesture(callback: GestureCallback): void {
@@ -93,7 +94,7 @@ export class InputSystem extends Component {
     isLeftScreen: boolean
   ): GestureResult | null {
     const minDistance = 30;
-    const maxDuration = 500;
+    const maxDuration = 5000; // 放宽，兼容浏览器鼠标拖动
 
     if (distance < minDistance || duration > maxDuration) {
       return null;

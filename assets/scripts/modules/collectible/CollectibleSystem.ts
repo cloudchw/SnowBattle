@@ -6,13 +6,13 @@ import { BALANCE } from '../../config/balance';
 
 const { ccclass, property } = _decorator;
 
-interface Coin {
+export interface Coin {
   x: number;
   y: number;
   collected: boolean;
 }
 
-interface PowerUp {
+export interface PowerUp {
   type: PowerUpType;
   x: number;
   y: number;
@@ -89,6 +89,14 @@ export class CollectibleSystem extends Component {
     });
 
     return { coins, powerup };
+  }
+
+  getCoins(): ReadonlyArray<Coin> {
+    return this.coins;
+  }
+
+  getPowerups(): ReadonlyArray<PowerUp> {
+    return this.powerups;
   }
 
   clear(): void {
