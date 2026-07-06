@@ -1,4 +1,4 @@
-import { _decorator, Component, director, Node } from 'cc';
+import { _decorator, Component, director, Node, profiler } from 'cc';
 import { eventBus, GameEvent } from './EventBus';
 import { scheduler } from './Scheduler';
 import { LevelSystem } from '../modules/level/LevelSystem';
@@ -49,6 +49,7 @@ export class GameApp extends Component {
     await cloudBridge.login();
     analyticsService.funnel('launch');
 
+    profiler.hideStats();
     this.setupExternalServices();
     this.setupEventListeners();
     this.setupInputHandlers();
@@ -129,6 +130,7 @@ export class GameApp extends Component {
       this.obstacleSystem.initFromConfig(levelState.config.obstacles);
       this.collectibleSystem.initFromConfig(levelState.config.collectibles);
       this.weatherSystem.init(levelState.config.weather);
+      this.levelSystem.resume();
     } else {
       console.warn('[GameApp] levelState=null，关卡数据未加载，靠 endless 生成');
     }
@@ -148,6 +150,7 @@ export class GameApp extends Component {
     this.powerupSystem.reset();
 
     this.levelSystem.startEndless();
+    this.levelSystem.resume();
     this.obstacleSystem.clear();
     this.collectibleSystem.clear();
 

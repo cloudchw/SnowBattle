@@ -73,6 +73,10 @@ SnowBattle/
 2. 点击顶部工具栏的"播放"按钮
 3. 在浏览器中预览游戏
 
+### Agent Team 协作规范
+- 项目级 Agent 规则见 `AGENTS.md`
+- 详细角色定义与全任务 Team 流程见 `doc/guides/agent-team.md`
+
 ### 构建微信小游戏
 1. 选择"项目" -> "构建发布"
 2. 在"发布平台"中选择"微信小游戏"
