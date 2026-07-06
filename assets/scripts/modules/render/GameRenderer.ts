@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Graphics, Color, UITransform } from 'cc';
+import { _decorator, Component, Node, Graphics, Color, UITransform, Camera } from 'cc';
 import { ObstacleRuntime, ObstacleType } from '../../types/obstacle';
 import { Coin, PowerUp } from '../collectible/CollectibleSystem';
 import { PowerUpType } from '../../types/powerup';
@@ -9,25 +9,37 @@ const DESIGN_W = 960;
 const DESIGN_H = 640;
 const PLAYER_SCREEN_X = -DESIGN_W / 4;
 
-/**
- * 程序化渲染层：用一个 Graphics 子节点画出全部内容（背景/玩家/障碍/金币/道具）。
- * 一个节点整体渲染或整体不渲染，规避了多 Sprite 节点"部分渲染部分不"的问题。
- */
 @ccclass('GameRenderer')
 export class GameRenderer extends Component {
   private gfx!: Graphics;
+  private cam: Camera | null = null;
 
   onLoad() {
-    // Canvas 组件会把 Canvas 节点 position 设为设计中心，而相机看世界原点，
-    // 这里反向抵消，把本节点世界坐标拉回原点。
+    // 抵消 Canvas 位置偏移
     const canvas = this.node.parent!.parent!;
     this.node.setPosition(-canvas.position.x, -canvas.position.y, 0);
 
+    // 先创建 gfx，确保 render 一定可用
     const draw = new Node('Draw');
     draw.parent = this.node;
     const ut = draw.addComponent(UITransform);
     ut.setContentSize(DESIGN_W, DESIGN_H);
     this.gfx = draw.addComponent(Graphics);
+
+    // 修正相机配置（场景相机被错误配成 ortho=10、位置偏离），用 try-catch 保护
+    try {
+      const cams = this.node.scene!.getComponentsInChildren(Camera);
+      if (cams.length > 0) {
+        this.cam = cams[0];
+        this.cam.orthoHeight = DESIGN_H / 2;
+        this.cam.node.setPosition(0, 0, 10);
+        console.log('[GameRenderer] 相机已修正: ortho=' + this.cam.orthoHeight);
+      } else {
+        console.warn('[GameRenderer] 未找到相机');
+      }
+    } catch (e) {
+      console.warn('[GameRenderer] 相机修正失败:', e);
+    }
   }
 
   render(
@@ -37,6 +49,11 @@ export class GameRenderer extends Component {
     coins: ReadonlyArray<Coin>,
     powerups: ReadonlyArray<PowerUp>,
   ): void {
+    // 每帧固定相机 + 抵消 Canvas
+    if (this.cam) this.cam.node.setPosition(0, 0, 10);
+    const canvas = this.node.parent!.parent!;
+    this.node.setPosition(-canvas.position.x, -canvas.position.y, 0);
+
     const g = this.gfx;
     if (!g) return;
     g.clear();
@@ -46,7 +63,7 @@ export class GameRenderer extends Component {
     g.rect(-DESIGN_W / 2, -DESIGN_H / 2, DESIGN_W, DESIGN_H);
     g.fill();
 
-    // 障碍（按类型颜色，用其 width/height 画矩形）
+    // 障碍
     for (const obs of obstacles) {
       const x = this.sx(obs.x, playerX);
       const y = this.syScreen(obs.y);
@@ -71,12 +88,9 @@ export class GameRenderer extends Component {
       g.fill();
     }
 
-    // 玩家（最后画，在最上层）
-    g.fillColor = new Color(220, 40, 40, 255);
-    g.circle(PLAYER_SCREEN_X, this.syPlayer(playerY), 20);
-    g.fill();
-    g.fillColor = new Color(255, 255, 255, 255);
-    g.circle(PLAYER_SCREEN_X + 8, this.syPlayer(playerY) + 6, 4);
+    // 玩家（临时用亮黄色大圆，便于和红色道具区分）
+    g.fillColor = new Color(255, 230, 0, 255);
+    g.circle(PLAYER_SCREEN_X, this.syPlayer(playerY), 30);
     g.fill();
   }
 

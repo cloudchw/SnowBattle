@@ -191,7 +191,8 @@ export class GameApp extends Component {
     const hitObstacle = this.obstacleSystem.checkAllCollisions(playerBounds);
     if (hitObstacle) {
       if (hitObstacle.isFatal) {
-        this.levelSystem.onPlayerDead('obstacle_hit');
+        // TODO: 碰撞坐标系(玩家y=高度 vs 障碍y=DOM)不一致，临时禁用致命碰撞以便观察漂移
+        // this.levelSystem.onPlayerDead('obstacle_hit');
       } else {
         this.levelSystem.onPlayerHit(1);
         this.playerSystem.onCollisionResponse('hit');
