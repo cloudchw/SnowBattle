@@ -1,8 +1,8 @@
-import { _decorator, Component, Node, Prefab, instantiate, Vec2 as CocosVec2 } from 'cc';
-import { ObstacleType, ObstacleState, ObstacleConfig, ObstacleRuntime } from '../../types/obstacle';
+import { _decorator, Component, Prefab } from 'cc';
+import { ObstacleType, ObstacleConfig, ObstacleRuntime } from '../../types/obstacle';
 import { BALANCE } from '../../config/balance';
 import { Pool } from '../../core/Pool';
-import { Rect, vec2, vec2Distance, Vec2 } from '../../utils/math';
+import { Rect } from '../../utils/math';
 import { RNG } from '../../utils/rng';
 
 const { ccclass, property } = _decorator;
@@ -24,7 +24,7 @@ export class ObstacleSystem extends Component {
   @property(Prefab) rockPrefab: Prefab = null!;
 
   private obstacles: ObstacleRuntime[] = [];
-  private pool: Pool<ObstacleRuntime>;
+  private pool!: Pool<ObstacleRuntime>;
   private nextId: number = 0;
   private rng: RNG = new RNG(12345);
   private lastSpawnX: number = 0;
@@ -39,7 +39,7 @@ export class ObstacleSystem extends Component {
     this.prefabConfigs.set('rock', { type: 'rock', prefab: this.rockPrefab, width: 50, height: 50, isFatal: true });
 
     this.pool = new Pool<ObstacleRuntime>(
-      () => this.createObstacle('tree', 0, 0),
+      () => this.createRawObstacle(),
       (obs) => this.resetObstacle(obs),
       20
     );
@@ -132,20 +132,35 @@ export class ObstacleSystem extends Component {
 
   private createObstacle(type: ObstacleType, x: number, y: number): ObstacleRuntime {
     const config = this.prefabConfigs.get(type);
+    const runtime = this.pool.acquire();
+    runtime.id = this.nextId++;
+    runtime.type = type;
+    runtime.x = x;
+    runtime.y = y;
+    runtime.width = config?.width ?? 40;
+    runtime.height = config?.height ?? 40;
+    runtime.state = 'normal';
+    runtime.isFatal = config?.isFatal ?? true;
+    return runtime;
+  }
+
+  private createRawObstacle(): ObstacleRuntime {
     return {
-      id: this.nextId++,
-      type,
-      x,
-      y,
-      width: config?.width ?? 40,
-      height: config?.height ?? 40,
+      id: 0,
+      type: 'tree',
+      x: 0,
+      y: 0,
+      width: 40,
+      height: 80,
       state: 'normal',
-      isFatal: config?.isFatal ?? true,
+      isFatal: true,
     };
   }
 
   private resetObstacle(obs: ObstacleRuntime): void {
-    (obs as any).state = 'normal';
+    obs.state = 'normal';
+    obs.x = 0;
+    obs.y = 0;
   }
 
   private getSpacing(difficulty: number): number {

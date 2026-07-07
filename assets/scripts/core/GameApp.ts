@@ -114,6 +114,10 @@ export class GameApp extends Component {
     this.distanceTraveled = 0;
     this.comboTimer = 0;
 
+    if (this.renderer) {
+      await this.renderer.preload();
+    }
+
     this.playerSystem.init(this.characterSystem.getCurrentCharacter());
     this.scoringSystem.reset();
     this.powerupSystem.reset();
@@ -140,10 +144,14 @@ export class GameApp extends Component {
     console.log('[GameApp] startLevel 完成, isPlaying=true, renderer绑定=' + (!!this.renderer));
   }
 
-  startEndless(): void {
+  async startEndless(): Promise<void> {
     this.isPlaying = false;
     this.distanceTraveled = 0;
     this.comboTimer = 0;
+
+    if (this.renderer) {
+      await this.renderer.preload();
+    }
 
     this.playerSystem.init(this.characterSystem.getCurrentCharacter());
     this.scoringSystem.reset();
@@ -178,10 +186,16 @@ export class GameApp extends Component {
     const playerX = this.distanceTraveled;
     const playerY = playerState.y;
 
-    this.obstacleSystem.spawnForEndless(this.distanceTraveled / 10000, playerX);
+    const activeLevelState = this.levelSystem.getState();
+    const shouldSpawnEndless = activeLevelState?.config.mode === 'endless';
+    if (shouldSpawnEndless) {
+      this.obstacleSystem.spawnForEndless(this.distanceTraveled / 10000, playerX);
+    }
     this.obstacleSystem.tick(dt, playerX);
 
-    this.collectibleSystem.spawnForEndless(this.distanceTraveled / 10000, playerX);
+    if (shouldSpawnEndless) {
+      this.collectibleSystem.spawnForEndless(this.distanceTraveled / 10000, playerX);
+    }
     this.collectibleSystem.tick(dt, { x: playerX, y: playerY }, this.powerupSystem.hasActive('magnet'));
 
     const playerBounds = {
@@ -218,7 +232,10 @@ export class GameApp extends Component {
       this.comboTimer = 0;
     }
 
-    this.uiFramework.updateHUD(this.levelSystem.getState()!, this.scoringSystem.getState());
+    const latestLevelState = this.levelSystem.getState();
+    if (latestLevelState) {
+      this.uiFramework.updateHUD(latestLevelState, this.scoringSystem.getState());
+    }
     this.uiFramework.setDistance(this.distanceTraveled);
     this.uiFramework.setWeather(this.weatherSystem.current().type);
 
