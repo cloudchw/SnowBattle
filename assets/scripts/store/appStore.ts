@@ -1,12 +1,13 @@
 import { PlayerSave } from '../types/player';
 import { LevelConfig } from '../types/level';
+import { CharacterType } from '../types/character';
 
 export type AppAction =
   | { type: 'SET_PLAYER'; player: PlayerSave }
   | { type: 'UPDATE_COINS'; coins: number }
   | { type: 'UNLOCK_LEVEL'; levelId: number }
   | { type: 'SET_STARS'; levelId: number; stars: 0 | 1 | 2 | 3 }
-  | { type: 'EQUIP_CHARACTER'; character: string }
+  | { type: 'EQUIP_CHARACTER'; character: CharacterType }
   | { type: 'SET_CURRENT_LEVEL'; level: LevelConfig | null }
   | { type: 'UPDATE_SETTINGS'; settings: Partial<AppState['settings']> };
 
@@ -38,7 +39,7 @@ const defaultPlayer: PlayerSave = {
   lastSyncTs: Date.now(),
 };
 
-const initialState: AppState = {
+export const initialState: AppState = {
   player: defaultPlayer,
   currentLevel: null,
   settings: { bgmVolume: 0.6, sfxVolume: 0.8, vibration: true },
@@ -66,14 +67,14 @@ export function appReducer(state: AppState, action: AppAction): AppState {
           ...state.player,
           stars: {
             ...state.player.stars,
-            [action.levelId]: Math.max(state.player.stars[action.levelId] ?? 0, action.stars),
+            [action.levelId]: Math.max(state.player.stars[action.levelId] ?? 0, action.stars) as 0 | 1 | 2 | 3,
           },
         },
       };
     case 'EQUIP_CHARACTER':
       return {
         ...state,
-        player: { ...state.player, equippedCharacter: action.character as any },
+        player: { ...state.player, equippedCharacter: action.character },
       };
     case 'SET_CURRENT_LEVEL':
       return { ...state, currentLevel: action.level };

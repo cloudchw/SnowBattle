@@ -1,6 +1,8 @@
-import { LevelConfig } from '../types/level';
-
-const LEVEL_SCHEMA = {
+/**
+ * 关卡 JSON schema（JSON Schema 风格，预留给校验工具/CLI 使用）。
+ * validateLevelConfig 当前用手写校验，schema 作为权威结构定义导出。
+ */
+export const LEVEL_SCHEMA = {
   type: 'object',
   required: ['id', 'name', 'chapter', 'terrain', 'mode', 'weather', 'obstacles', 'collectibles', 'goals', 'stars_threshold', 'difficulty'],
   properties: {
@@ -81,50 +83,55 @@ const LEVEL_SCHEMA = {
   },
 };
 
-export function validateLevelConfig(config: any): { valid: boolean; errors: string[] } {
+/**
+ * 校验关卡配置对象。输入来源未知（CDN/本地 JSON），故用 unknown 入参后内部收窄。
+ */
+export function validateLevelConfig(config: unknown): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
 
   if (!config || typeof config !== 'object') {
     return { valid: false, errors: ['Config is not an object'] };
   }
 
-  if (typeof config.id !== 'string' || !/^Lv_\d{3}$/.test(config.id)) {
+  const c = config as Record<string, unknown>;
+
+  if (typeof c.id !== 'string' || !/^Lv_\d{3}$/.test(c.id)) {
     errors.push('Invalid level ID format (expected Lv_XXX)');
   }
 
-  if (typeof config.name !== 'string' || config.name.length === 0) {
+  if (typeof c.name !== 'string' || c.name.length === 0) {
     errors.push('Level name is required');
   }
 
-  if (typeof config.chapter !== 'number' || config.chapter < 1 || config.chapter > 6) {
+  if (typeof c.chapter !== 'number' || c.chapter < 1 || c.chapter > 6) {
     errors.push('Chapter must be 1-6');
   }
 
-  if (!['level', 'endless'].includes(config.mode)) {
+  if (!['level', 'endless'].includes(c.mode as string)) {
     errors.push('Invalid mode');
   }
 
-  if (!config.weather || typeof config.weather !== 'object') {
+  if (!c.weather || typeof c.weather !== 'object') {
     errors.push('Weather config is required');
   }
 
-  if (!Array.isArray(config.obstacles)) {
+  if (!Array.isArray(c.obstacles)) {
     errors.push('Obstacles must be an array');
   }
 
-  if (!config.collectibles || typeof config.collectibles !== 'object') {
+  if (!c.collectibles || typeof c.collectibles !== 'object') {
     errors.push('Collectibles config is required');
   }
 
-  if (!config.goals || typeof config.goals !== 'object') {
+  if (!c.goals || typeof c.goals !== 'object') {
     errors.push('Goals config is required');
   }
 
-  if (!config.stars_threshold || typeof config.stars_threshold !== 'object') {
+  if (!c.stars_threshold || typeof c.stars_threshold !== 'object') {
     errors.push('Stars threshold config is required');
   }
 
-  if (typeof config.difficulty !== 'number' || config.difficulty < 0 || config.difficulty > 1) {
+  if (typeof c.difficulty !== 'number' || c.difficulty < 0 || c.difficulty > 1) {
     errors.push('Difficulty must be 0-1');
   }
 

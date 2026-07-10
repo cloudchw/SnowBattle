@@ -2,6 +2,9 @@ import { PlayerState, PlayerAction, PlayerPhase } from '../../types/player';
 import { BALANCE } from '../../config/balance';
 import { clamp } from '../../utils/math';
 
+// 与 levelReducer 一致：re-export 状态/动作类型，供测试与 System 单点 import。
+export type { PlayerState, PlayerAction, PlayerPhase };
+
 export function playerReducer(state: PlayerState, action: PlayerAction): PlayerState {
   switch (action.type) {
     case 'JUMP': {

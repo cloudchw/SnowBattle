@@ -146,11 +146,11 @@ export class GameRenderer extends Component {
     }
 
     this.renderTrackGuides(playerX);
-    this.drawSprite('skiTrail', this.playerScreenX() - 46, this.syPlayer(playerY) - 20, 132, 56);
+    this.drawSprite('skiTrail', this.playerScreenX() - 46, this.syWorld(playerY) - 20, 132, 56);
 
     for (const obs of obstacles) {
       const x = this.sx(obs.x, playerX);
-      const y = this.syScreen(obs.y);
+      const y = this.syWorld(obs.y);
       const size = this.obstacleRenderSize(obs);
       if (!this.isWithinViewport(x, y, size.width, size.height, 180)) {
         continue;
@@ -172,7 +172,7 @@ export class GameRenderer extends Component {
     for (const coin of coins) {
       if (coin.collected) continue;
       const x = this.sx(coin.x, playerX);
-      const y = this.syScreen(coin.y);
+      const y = this.syWorld(coin.y);
       if (!this.isWithinViewport(x, y, 44, 44, 120)) {
         continue;
       }
@@ -185,7 +185,7 @@ export class GameRenderer extends Component {
     for (const powerup of powerups) {
       if (powerup.collected) continue;
       const x = this.sx(powerup.x, playerX);
-      const y = this.syScreen(powerup.y);
+      const y = this.syWorld(powerup.y);
       if (!this.isWithinViewport(x, y, 56, 56, 120)) {
         continue;
       }
@@ -198,7 +198,7 @@ export class GameRenderer extends Component {
     }
 
     const playerKey: SpriteKey = playerY > 8 ? 'playerJump' : 'playerSki';
-    if (!this.drawSprite(playerKey, this.playerScreenX(), this.syPlayer(playerY), 96, 128)) {
+    if (!this.drawSprite(playerKey, this.playerScreenX(), this.syWorld(playerY), 96, 128)) {
       this.drawFallbackPlayer(g, playerY);
     }
 
@@ -290,7 +290,7 @@ export class GameRenderer extends Component {
     const spacing = 520;
     const offset = playerX % spacing;
     const startX = this.playerScreenX() + 180 - offset;
-    const y = this.syScreen(170);
+    const y = this.syWorld(-24);
     for (let i = 0; i < 4; i++) {
       this.drawSprite('trackGuides', startX + i * spacing, y, 380, 120, 120);
     }
@@ -421,7 +421,7 @@ export class GameRenderer extends Component {
 
   private drawFallbackPlayer(g: Graphics, playerY: number): void {
     g.fillColor = new Color(255, 230, 0, 255);
-    g.circle(this.playerScreenX(), this.syPlayer(playerY), 30);
+    g.circle(this.playerScreenX(), this.syWorld(playerY), 30);
     g.fill();
   }
 
@@ -446,12 +446,8 @@ export class GameRenderer extends Component {
     return worldX - playerX + this.playerScreenX();
   }
 
-  private syPlayer(y: number): number {
+  private syWorld(y: number): number {
     return y - this.viewportHeight * 0.4;
-  }
-
-  private syScreen(y: number): number {
-    return this.viewportHeight / 2 - y;
   }
 
   private obstacleColor(type: ObstacleType): Color {

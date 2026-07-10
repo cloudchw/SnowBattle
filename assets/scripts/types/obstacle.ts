@@ -9,12 +9,12 @@ export interface ObstacleConfig {
 }
 
 export interface ObstacleRuntime {
-  readonly id: number;
-  readonly type: ObstacleType;
+  id: number;
+  type: ObstacleType;
   x: number;
   y: number;
-  readonly width: number;
-  readonly height: number;
+  width: number;
+  height: number;
   state: ObstacleState;
-  readonly isFatal: boolean;
+  isFatal: boolean;
 }

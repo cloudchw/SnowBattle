@@ -20,9 +20,9 @@ export function getDeviceInfo(): DeviceInfo {
   if (typeof wx !== 'undefined' && wx.getDeviceInfo) {
     try {
       const deviceInfo = wx.getDeviceInfo();
-      memoryMB = (deviceInfo as any).memoryMB || 2048;
-    } catch (e) {
-      // fallback
+      memoryMB = deviceInfo.memoryMB || 2048;
+    } catch (_e) {
+      // fallback：拿不到设备信息时沿用默认值
     }
   }
 
@@ -38,7 +38,7 @@ export function getDeviceInfo(): DeviceInfo {
 
 function estimateGpuScore(): number {
   const canvas = document.createElement('canvas');
-  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  const gl = (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')) as WebGLRenderingContext | null;
   if (!gl) return 30;
 
   const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');

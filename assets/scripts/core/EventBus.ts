@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// 事件总线承载异构载荷（各 GameEvent 的参数形状不同），保留 any 以兼容任意回调签名与 emit 实参。
+// 这是核心基础设施的边界妥协，非业务 any；具体类型安全由各 emit / 回调站点自行保证。
+
 export enum GameEvent {
   PLAYER_JUMP = 'player_jump',
   PLAYER_DIVE = 'player_dive',

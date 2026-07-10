@@ -14,9 +14,6 @@
     "test:integration": "jest --testPathPattern=tests/integration",
     "validate:levels": "node tools/level-validator/index.js"
   },
-  "dependencies": {
-    "cocos-creator": "^3.8.8"
-  },
   "devDependencies": {
     "typescript": "^5.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",

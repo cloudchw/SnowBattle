@@ -19,14 +19,20 @@ export class RNG {
   }
 
   pick<T>(array: ReadonlyArray<T>): T {
-    return array[this.nextInt(0, array.length - 1)];
+    const idx = this.nextInt(0, array.length - 1);
+    return array[idx] as T;
   }
 
   shuffle<T>(array: T[]): T[] {
     const result = [...array];
     for (let i = result.length - 1; i > 0; i--) {
       const j = this.nextInt(0, i);
-      [result[i], result[j]] = [result[j], result[i]];
+      const a = result[i];
+      const b = result[j];
+      if (a !== undefined && b !== undefined) {
+        result[i] = b;
+        result[j] = a;
+      }
     }
     return result;
   }

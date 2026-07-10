@@ -1,7 +1,7 @@
-import { _decorator, Component, EventTouch, Touch, input, Input, Vec2 as CocosVec2 } from 'cc';
+import { _decorator, Component, EventTouch, input, Input, Vec2 as CocosVec2, view } from 'cc';
 import { GestureResult } from './gestureRecognizer';
 
-const { ccclass, property } = _decorator;
+const { ccclass } = _decorator;
 
 export type GestureCallback = (gesture: GestureResult) => void;
 
@@ -56,6 +56,7 @@ export class InputSystem extends Component {
   }
 
   private onTouchMove(event: EventTouch): void {
+    void event;
     if (!this.enabled || !this.isTracking) return;
   }
 
@@ -70,12 +71,12 @@ export class InputSystem extends Component {
     const deltaY = endPos.y - this.touchStartPos.y;
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-    const screenWidth = window.innerWidth;
+    const screenWidth = view.getVisibleSize().width;
     const isLeftScreen = this.touchStartPos.x < screenWidth / 2;
 
     const gesture = this.recognizeGesture(deltaX, deltaY, distance, duration, isLeftScreen);
 
-    if (gesture && this.allowedGestures.has(gesture.direction)) {
+    if (gesture && gesture.direction !== null && this.allowedGestures.has(gesture.direction)) {
       this.gestureCallbacks.forEach(cb => cb(gesture));
     }
 
@@ -83,6 +84,7 @@ export class InputSystem extends Component {
   }
 
   private onTouchCancel(event: EventTouch): void {
+    void event;
     this.isTracking = false;
   }
 
@@ -102,7 +104,7 @@ export class InputSystem extends Component {
 
     const angle = Math.atan2(-deltaY, deltaX) * (180 / Math.PI);
     let direction: GestureResult['direction'] = null;
-    let screen: 'left' | 'right' = isLeftScreen ? 'left' : 'right';
+    const screen: 'left' | 'right' = isLeftScreen ? 'left' : 'right';
 
     if (isLeftScreen) {
       if (angle > 45 && angle < 135) {
@@ -122,7 +124,7 @@ export class InputSystem extends Component {
       }
     }
 
-    if (!direction) return null;
+    if (direction === null) return null;
 
     return {
       direction,

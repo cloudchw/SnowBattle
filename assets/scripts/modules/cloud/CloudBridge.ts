@@ -10,6 +10,11 @@ export interface RankEntry {
   rank: number;
 }
 
+/** wx.cloud.callFunction 成功回调载荷的最小形状。 */
+interface WxCallFunctionResult<T> {
+  result: T;
+}
+
 export class CloudBridge {
   private static instance: CloudBridge;
   private uid: string = '';
@@ -28,9 +33,9 @@ export class CloudBridge {
     }
 
     return new Promise((resolve) => {
-      (wx as any).cloud.callFunction({
+      wx.cloud.callFunction({
         name: 'login',
-        success: (res: any) => {
+        success: (res: WxCallFunctionResult<{ uid: string; token: string }>) => {
           this.uid = res.result.uid;
           resolve(res.result);
         },
@@ -48,10 +53,10 @@ export class CloudBridge {
     }
 
     return new Promise((resolve) => {
-      (wx as any).cloud.callFunction({
+      wx.cloud.callFunction({
         name: 'reportLevel',
         data: { result, clientVersion: result.clientVersion },
-        success: (res: any) => resolve(res.result),
+        success: (res: WxCallFunctionResult<{ ok: boolean; awardedStars: number }>) => resolve(res.result),
         fail: () => resolve({ ok: false, awardedStars: 0 }),
       });
     });
@@ -63,10 +68,10 @@ export class CloudBridge {
     }
 
     return new Promise((resolve) => {
-      (wx as any).cloud.callFunction({
+      wx.cloud.callFunction({
         name: 'getRanking',
         data: { scope, limit },
-        success: (res: any) => resolve(res.result.entries || []),
+        success: (res: WxCallFunctionResult<{ entries: RankEntry[] }>) => resolve(res.result.entries || []),
         fail: () => resolve([]),
       });
     });
@@ -78,7 +83,7 @@ export class CloudBridge {
     }
 
     return new Promise((resolve) => {
-      (wx as any).cloud.callFunction({
+      wx.cloud.callFunction({
         name: 'reportAnalytics',
         data: { events, clientVersion: 1 },
         success: () => resolve({ ok: true }),
@@ -93,7 +98,7 @@ export class CloudBridge {
     }
 
     return new Promise((resolve) => {
-      (wx as any).cloud.callFunction({
+      wx.cloud.callFunction({
         name: 'syncPlayerSave',
         data: { save },
         success: () => resolve({ ok: true }),
@@ -108,9 +113,9 @@ export class CloudBridge {
     }
 
     return new Promise((resolve) => {
-      (wx as any).cloud.callFunction({
+      wx.cloud.callFunction({
         name: 'login',
-        success: (res: any) => {
+        success: (res: WxCallFunctionResult<{ save?: PlayerSave | null }>) => {
           resolve(res.result.save || null);
         },
         fail: () => resolve(null),

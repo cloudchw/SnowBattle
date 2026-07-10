@@ -2,7 +2,7 @@ import { _decorator, Component } from 'cc';
 import { WeatherType, WeatherConfig, WEATHER_CONFIGS } from '../../types/weather';
 import { eventBus, GameEvent } from '../../core/EventBus';
 
-const { ccclass, property } = _decorator;
+const { ccclass } = _decorator;
 
 @ccclass('WeatherSystem')
 export class WeatherSystem extends Component {
@@ -21,7 +21,7 @@ export class WeatherSystem extends Component {
     return this.currentConfig;
   }
 
-  changeWeather(type: WeatherType, duration?: number): void {
+  changeWeather(type: WeatherType, _duration?: number): void {
     this.currentConfig = WEATHER_CONFIGS[type];
     eventBus.emit(GameEvent.WEATHER_CHANGE, type);
   }
@@ -44,9 +44,12 @@ export class WeatherSystem extends Component {
       const roll = Math.random();
       let cumulative = 0;
       for (let i = 0; i < types.length; i++) {
-        cumulative += weights[i];
+        const w = weights[i];
+        const t = types[i];
+        if (w === undefined || t === undefined) break;
+        cumulative += w;
         if (roll < cumulative) {
-          this.changeWeather(types[i]);
+          this.changeWeather(t);
           break;
         }
       }

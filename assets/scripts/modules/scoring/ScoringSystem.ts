@@ -3,7 +3,7 @@ import { ScoringState, ScoringAction } from './scoreReducer';
 import { BALANCE } from '../../config/balance';
 import { eventBus, GameEvent } from '../../core/EventBus';
 
-const { ccclass, property } = _decorator;
+const { ccclass } = _decorator;
 
 const initialScoringState: ScoringState = {
   score: 0,

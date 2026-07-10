@@ -15,6 +15,11 @@ export interface PurchaseRecord {
   timestamp: number;
 }
 
+/** wx.getProducts 成功回调载荷的最小形状。 */
+interface WxProductsResult {
+  products?: IapProduct[];
+}
+
 export class IAPSystem {
   private static instance: IAPSystem;
   private products: IapProduct[] = [];
@@ -38,9 +43,9 @@ export class IAPSystem {
         resolve(this.products);
         return;
       }
-      (wx as any).getProducts({
+      wx.getProducts({
         productIds: this.products.map((p) => p.id),
-        success: (res: any) => {
+        success: (res: WxProductsResult) => {
           if (res && Array.isArray(res.products)) {
             this.products = res.products;
           }
@@ -58,7 +63,7 @@ export class IAPSystem {
         resolve(false);
         return;
       }
-      (wx as any).requestMidoPayment({
+      wx.requestMidoPayment({
         productId,
         success: () => {
           this.purchaseHistory.push({ productId, timestamp: Date.now() });

@@ -1,4 +1,4 @@
-import { _decorator, Component } from 'cc';
+import { _decorator, Component, view } from 'cc';
 import { PowerUpType } from '../../types/powerup';
 import { vec2, Vec2, vec2Distance } from '../../utils/math';
 import { RNG } from '../../utils/rng';
@@ -36,7 +36,7 @@ export class CollectibleSystem extends Component {
   private lastCoinSpawnX: number = Number.NEGATIVE_INFINITY;
   private lastPowerupSpawnX: number = Number.NEGATIVE_INFINITY;
 
-  initFromConfig(config: { coins: { count: number; pattern: string }; powerups: Array<{ type: PowerUpType; position: [number, number] }> }): void {
+  initFromConfig(config: Readonly<{ coins: { count: number; pattern: string }; powerups: ReadonlyArray<{ type: PowerUpType; position: readonly [number, number] }> }>): void {
     this.clear();
     this.generateCoins(config.coins.count, config.coins.pattern);
     config.powerups.forEach(p => {
@@ -74,6 +74,7 @@ export class CollectibleSystem extends Component {
   }
 
   tick(dt: number, playerPos: Vec2, hasMagnet: boolean): void {
+    void dt;
     if (hasMagnet) {
       this.coins.forEach(coin => {
         if (!coin.collected) {
@@ -128,6 +129,7 @@ export class CollectibleSystem extends Component {
   }
 
   private generateCoins(count: number, pattern: string): void {
+    void pattern;
     for (let i = 0; i < count; i++) {
       const x = 200 + i * 150;
       const y = 150 + Math.sin(i * 0.5) * 50;
@@ -166,11 +168,13 @@ export class CollectibleSystem extends Component {
   }
 
   private viewportWidth(): number {
-    return window.innerWidth > 0 ? window.innerWidth : FALLBACK_VIEW_W;
+    const w = view.getVisibleSize().width;
+    return w > 0 ? w : FALLBACK_VIEW_W;
   }
 
   private viewportHeight(): number {
-    return window.innerHeight > 0 ? window.innerHeight : FALLBACK_VIEW_H;
+    const h = view.getVisibleSize().height;
+    return h > 0 ? h : FALLBACK_VIEW_H;
   }
 
   private isInBounds(x: number, y: number, bounds: { x: number; y: number; width: number; height: number }): boolean {

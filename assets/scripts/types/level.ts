@@ -1,6 +1,6 @@
 import type { ObstacleConfig } from './obstacle';
 import type { WeatherConfig } from './weather';
-import type { PowerUpType } from './powerup';
+import type { PowerUpConfig, PowerUpType } from './powerup';
 
 export interface LevelConfig {
   readonly id: string;
@@ -37,7 +37,7 @@ export interface LevelResult {
   readonly coinsCollected: number;
   readonly obstaclesDodged: number;
   readonly comboMax: number;
-  readonly failReason?: FailReason;
+  readonly failReason?: FailReason | undefined;
   readonly timestamp: number;
   readonly clientVersion: number;
 }

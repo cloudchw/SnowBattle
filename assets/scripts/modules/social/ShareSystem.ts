@@ -24,12 +24,11 @@ export class ShareSystem {
   /** 注册分享菜单与默认分享内容；幂等，仅生效一次。 */
   setupShareMenu(): void {
     if (this.menuReady || typeof wx === 'undefined') return;
-    const w = wx as any;
-    w.showShareMenu({
+    wx.showShareMenu({
       withShareTicket: true,
       menus: ['shareAppMessage', 'shareTimeline'],
     });
-    w.onShareAppMessage(() => ({
+    wx.onShareAppMessage(() => ({
       title: this.shareTitle,
       imageUrl: this.shareImageUrl,
     }));
@@ -50,7 +49,7 @@ export class ShareSystem {
         resolve(false);
         return;
       }
-      (wx as any)[api]({
+      wx[api]({
         title: title ?? this.shareTitle,
         imageUrl: imageUrl ?? this.shareImageUrl,
         success: () => resolve(true),

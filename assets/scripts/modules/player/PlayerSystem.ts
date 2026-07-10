@@ -5,7 +5,7 @@ import { BALANCE } from '../../config/balance';
 import { eventBus, GameEvent } from '../../core/EventBus';
 import { clamp } from '../../utils/math';
 
-const { ccclass, property } = _decorator;
+const { ccclass } = _decorator;
 
 const initialState: PlayerState = {
   x: 0,
@@ -97,7 +97,7 @@ export class PlayerSystem extends Component {
         return {
           ...state,
           phase: 'diving',
-          y: Math.max(0, state.y - BALANCE.PLAYER.DIVE_SPEED * (action.dtMs / 1000)),
+          y: Math.max(0, state.y - BALANCE.PLAYER.DIVE_SPEED * (BALANCE.PLAYER.DIVE_DURATION / 1000)),
           cooldowns: { ...state.cooldowns, dive: BALANCE.COOLDOWNS.DIVE },
         };
       }

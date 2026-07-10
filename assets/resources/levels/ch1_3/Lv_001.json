@@ -13,16 +13,12 @@
     "windDir": 0
   },
   "obstacles": [
-    { "type": "tree", "position": [300, 200], "state": "normal" },
-    { "type": "tree", "position": [500, 150], "state": "normal" },
-    { "type": "snow_pile", "position": [700, 180], "state": "normal" },
-    { "type": "tree", "position": [900, 220], "state": "normal" },
-    { "type": "snow_pile", "position": [1100, 160], "state": "normal" },
-    { "type": "tree", "position": [1300, 190], "state": "normal" },
-    { "type": "cliff", "position": [1500, 100], "state": "warning" },
-    { "type": "tree", "position": [1700, 210], "state": "normal" },
-    { "type": "snow_pile", "position": [1900, 170], "state": "normal" },
-    { "type": "tree", "position": [2100, 200], "state": "normal" }
+    { "type": "tree", "position": [380, 0], "state": "normal" },
+    { "type": "snow_pile", "position": [780, 0], "state": "normal" },
+    { "type": "rock", "position": [1200, 0], "state": "normal" },
+    { "type": "ice", "position": [1600, 0], "state": "normal" },
+    { "type": "tree", "position": [2020, 0], "state": "normal" },
+    { "type": "cliff", "position": [2440, 0], "state": "warning" }
   ],
   "collectibles": {
     "coins": {

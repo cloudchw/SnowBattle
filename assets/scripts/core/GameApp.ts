@@ -1,4 +1,4 @@
-import { _decorator, Component, director, Node, profiler } from 'cc';
+import { _decorator, Component, profiler } from 'cc';
 import { eventBus, GameEvent } from './EventBus';
 import { scheduler } from './Scheduler';
 import { LevelSystem } from '../modules/level/LevelSystem';
@@ -19,7 +19,7 @@ import { adSystem } from '../modules/ads/AdSystem';
 import { iapSystem } from '../modules/economy/IAPSystem';
 import { shareSystem } from '../modules/social/ShareSystem';
 import { detectDeviceTier } from '../utils/perf';
-import { BALANCE } from '../config/balance';
+import { LevelResult } from '../types/level';
 
 const { ccclass, property } = _decorator;
 
@@ -189,7 +189,7 @@ export class GameApp extends Component {
     const activeLevelState = this.levelSystem.getState();
     const shouldSpawnEndless = activeLevelState?.config.mode === 'endless';
     if (shouldSpawnEndless) {
-      this.obstacleSystem.spawnForEndless(this.distanceTraveled / 10000, playerX);
+      this.obstacleSystem.spawnForEndless(this.distanceTraveled / 10000, playerX, playerState.speed);
     }
     this.obstacleSystem.tick(dt, playerX);
 
@@ -208,8 +208,11 @@ export class GameApp extends Component {
     const hitObstacle = this.obstacleSystem.checkAllCollisions(playerBounds);
     if (hitObstacle) {
       if (hitObstacle.isFatal) {
-        // TODO: 碰撞坐标系(玩家y=高度 vs 障碍y=DOM)不一致，临时禁用致命碰撞以便观察漂移
-        // this.levelSystem.onPlayerDead('obstacle_hit');
+        // TODO(坐标系): 玩家 y=跳跃高度 vs 障碍 y=地面坐标，两者语义未统一前致命碰撞判定不可靠
+        // （玩家贴地时其高度 y 与障碍地面 y 的碰撞框会错位重叠，导致开局即判碰撞）。
+        // 坐标系统一前暂不触发 onPlayerDead，仅做碰撞反馈，便于观察与调试漂移。
+        // 统一后恢复：this.levelSystem.onPlayerDead('obstacle_hit');
+        this.playerSystem.onCollisionResponse('hit');
       } else {
         this.levelSystem.onPlayerHit(1);
         this.playerSystem.onCollisionResponse('hit');
@@ -254,18 +257,18 @@ export class GameApp extends Component {
     this.audioManager?.playCollisionSound();
   }
 
-  private onPlayerDead(cause: string): void {
+  private onPlayerDead(_cause: string): void {
     this.isPlaying = false;
     scheduler.stop();
     this.uiFramework.showGameOver(0, this.scoringSystem.getScore());
   }
 
-  private onCoinCollected(count: number, total: number): void {
+  private onCoinCollected(_count: number, _total: number): void {
     this.comboTimer = 0;
     this.audioManager?.playCoinSound();
   }
 
-  private onLevelComplete(result: any): void {
+  private onLevelComplete(result: LevelResult): void {
     this.isPlaying = false;
     scheduler.stop();
     this.uiFramework.showLevelComplete(result.stars, this.scoringSystem.getScore());
@@ -279,7 +282,7 @@ export class GameApp extends Component {
     });
   }
 
-  private onLevelFail(result: any): void {
+  private onLevelFail(_result: LevelResult): void {
     this.isPlaying = false;
     scheduler.stop();
     this.uiFramework.showGameOver(0, this.scoringSystem.getScore());

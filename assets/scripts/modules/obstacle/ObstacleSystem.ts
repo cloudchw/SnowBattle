@@ -1,11 +1,20 @@
-import { _decorator, Component, Prefab } from 'cc';
+import { _decorator, Component, Prefab, view } from 'cc';
 import { ObstacleType, ObstacleConfig, ObstacleRuntime } from '../../types/obstacle';
 import { BALANCE } from '../../config/balance';
 import { Pool } from '../../core/Pool';
 import { Rect } from '../../utils/math';
 import { RNG } from '../../utils/rng';
+import {
+  chooseObstaclePosition,
+  chooseObstacleType,
+  OBSTACLE_GROUND_Y,
+  obstacleSpawnSpacing,
+  shouldSpawnObstacle,
+} from './obstacleSpawner';
 
 const { ccclass, property } = _decorator;
+
+const FALLBACK_VIEW_W = 960;
 
 interface ObstaclePrefabConfig {
   type: ObstacleType;
@@ -28,6 +37,7 @@ export class ObstacleSystem extends Component {
   private nextId: number = 0;
   private rng: RNG = new RNG(12345);
   private lastSpawnX: number = 0;
+  private nextSpawnSpacing: number = 0;
 
   private prefabConfigs: Map<ObstacleType, ObstaclePrefabConfig> = new Map();
 
@@ -37,6 +47,8 @@ export class ObstacleSystem extends Component {
     this.prefabConfigs.set('snow_pile', { type: 'snow_pile', prefab: this.snowPilePrefab, width: 60, height: 40, isFatal: false });
     this.prefabConfigs.set('ice', { type: 'ice', prefab: this.icePrefab, width: 120, height: 20, isFatal: false });
     this.prefabConfigs.set('rock', { type: 'rock', prefab: this.rockPrefab, width: 50, height: 50, isFatal: true });
+    // skier 无独立 Prefab（渲染由 GameRenderer 按 spriteKey 处理），此处仅提供碰撞框与致命性。
+    this.prefabConfigs.set('skier', { type: 'skier', prefab: null!, width: 40, height: 80, isFatal: true });
 
     this.pool = new Pool<ObstacleRuntime>(
       () => this.createRawObstacle(),
@@ -52,26 +64,31 @@ export class ObstacleSystem extends Component {
       runtime.state = config.state;
       this.obstacles.push(runtime);
     });
-    this.lastSpawnX = obstacles.length > 0 ? obstacles[obstacles.length - 1].position[0] : 0;
+    const last = this.obstacles[this.obstacles.length - 1];
+    this.lastSpawnX = last ? last.x : 0;
   }
 
-  spawnForEndless(difficulty: number, playerX: number): void {
-    const spawnX = playerX + window.innerWidth;
+  spawnForEndless(difficulty: number, playerX: number, playerSpeed: number = BALANCE.PLAYER.BASE_SPEED): void {
+    const spawnX = playerX + this.viewportWidth();
 
-    if (spawnX - this.lastSpawnX < this.getSpacing(difficulty)) {
+    if (!shouldSpawnObstacle(this.lastSpawnX, spawnX, difficulty, playerSpeed, this.nextSpawnSpacing)) {
       return;
     }
 
-    const type = this.chooseObstacleType(difficulty);
-    const y = this.rng.nextFloat(100, window.innerHeight - 100);
-    const runtime = this.createObstacle(type, spawnX, y);
+    const type = chooseObstacleType(difficulty, () => this.rng.next());
+    const [x, y] = chooseObstaclePosition(spawnX, difficulty, () => this.rng.next());
+    const runtime = this.createObstacle(type, x, y);
     this.obstacles.push(runtime);
-    this.lastSpawnX = spawnX;
+    this.lastSpawnX = x;
+    this.nextSpawnSpacing = obstacleSpawnSpacing(difficulty, () => this.rng.next(), playerSpeed);
   }
 
   tick(dt: number, playerX: number): void {
+    void dt;
     for (let i = this.obstacles.length - 1; i >= 0; i--) {
       const obs = this.obstacles[i];
+      if (!obs) continue;
+
       const distToPlayer = Math.abs(obs.x - playerX);
 
       if (distToPlayer < BALANCE.OBSTACLE.DANGER_DISTANCE) {
@@ -82,7 +99,7 @@ export class ObstacleSystem extends Component {
         obs.state = 'normal';
       }
 
-      if (obs.x < playerX - window.innerWidth) {
+      if (obs.x < playerX - this.viewportWidth()) {
         this.obstacles.splice(i, 1);
         this.pool.release(obs);
       }
@@ -128,17 +145,18 @@ export class ObstacleSystem extends Component {
     this.obstacles.forEach(obs => this.pool.release(obs));
     this.obstacles = [];
     this.lastSpawnX = 0;
+    this.nextSpawnSpacing = 0;
   }
 
-  private createObstacle(type: ObstacleType, x: number, y: number): ObstacleRuntime {
+  private createObstacle(type: ObstacleType, x: number, groundY: number): ObstacleRuntime {
     const config = this.prefabConfigs.get(type);
     const runtime = this.pool.acquire();
     runtime.id = this.nextId++;
     runtime.type = type;
     runtime.x = x;
-    runtime.y = y;
     runtime.width = config?.width ?? 40;
     runtime.height = config?.height ?? 40;
+    runtime.y = this.centerYFromGroundY(groundY, runtime.height);
     runtime.state = 'normal';
     runtime.isFatal = config?.isFatal ?? true;
     return runtime;
@@ -163,23 +181,13 @@ export class ObstacleSystem extends Component {
     obs.y = 0;
   }
 
-  private getSpacing(difficulty: number): number {
-    const spacing = BALANCE.OBSTACLE.BASE_SPACING - difficulty * 100;
-    return Math.max(spacing, BALANCE.OBSTACLE.MIN_SPACING);
+  private centerYFromGroundY(groundY: number, height: number): number {
+    return (groundY === OBSTACLE_GROUND_Y ? OBSTACLE_GROUND_Y : groundY) + height / 2;
   }
 
-  private chooseObstacleType(difficulty: number): ObstacleType {
-    const types: ObstacleType[] = ['tree', 'snow_pile', 'cliff', 'rock', 'ice'];
-    const weights = [0.4, 0.25, 0.15, 0.15, 0.05];
-    const roll = this.rng.next();
-    let cumulative = 0;
-    for (let i = 0; i < types.length; i++) {
-      cumulative += weights[i];
-      if (roll < cumulative) {
-        return types[i];
-      }
-    }
-    return 'tree';
+  private viewportWidth(): number {
+    const w = view.getVisibleSize().width;
+    return w > 0 ? w : FALLBACK_VIEW_W;
   }
 
   private rectIntersects(a: Rect, b: Rect): boolean {

@@ -2,7 +2,7 @@ import { _decorator, Component } from 'cc';
 import { CharacterType, CharacterStats, CHARACTER_STATS } from '../../types/character';
 import { PlayerSave } from '../../types/player';
 
-const { ccclass, property } = _decorator;
+const { ccclass } = _decorator;
 
 @ccclass('CharacterSystem')
 export class CharacterSystem extends Component {
@@ -54,20 +54,20 @@ export class CharacterSystem extends Component {
       return playerSave.coins >= 1000;
     }
 
-    const unlockByLevel: Record<CharacterType, number> = {
+    const unlockByLevel: Partial<Record<CharacterType, number>> = {
       ice_spirit: 10,
       storm_knight: 20,
       polar_explorer: 30,
       ski_master: 0,
     };
 
-    const requiredLevel = unlockByLevel[character];
+    const requiredLevel = unlockByLevel[character] ?? 0;
     if (requiredLevel > 0) {
       return playerSave.unlockedLevels >= requiredLevel;
     }
 
     if (character === 'ski_master') {
-      const totalStars = Object.values(playerSave.stars).reduce((sum, s) => sum + s, 0);
+      const totalStars = Object.values(playerSave.stars).reduce<number>((sum, s) => sum + s, 0);
       return totalStars >= 150;
     }
 

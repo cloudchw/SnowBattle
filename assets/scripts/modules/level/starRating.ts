@@ -4,7 +4,7 @@ export function rateStars(
   config: LevelConfig,
   elapsedMs: number,
   coinsCollected: number,
-  totalMs: number,
+  _totalMs: number,
 ): 0 | 1 | 2 | 3 {
   const timeThreshold3 = config.stars_threshold.time_3star * 1000;
   const timeThreshold2 = config.stars_threshold.time_2star * 1000;

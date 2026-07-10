@@ -1,10 +1,10 @@
 import { _decorator, Component, resources, JsonAsset } from 'cc';
 import { LevelConfig, LevelResult, FailReason } from '../../types/level';
-import { LevelState, LevelPhase, LevelAction, levelReducer } from './levelReducer';
+import { LevelState, levelReducer } from './levelReducer';
 import { rateStars } from './starRating';
 import { eventBus, GameEvent } from '../../core/EventBus';
 
-const { ccclass, property } = _decorator;
+const { ccclass } = _decorator;
 
 @ccclass('LevelSystem')
 export class LevelSystem extends Component {
@@ -156,12 +156,12 @@ export class LevelSystem extends Component {
     }
   }
 
-  private async loadLevelConfig(levelId: string): Promise<LevelConfig | null> {
+  private async loadLevelConfig(levelId: string): Promise<LevelConfig | undefined> {
     return new Promise((resolve) => {
-      resources.load(`levels/ch1_3/${levelId}`, JsonAsset, (err, asset) => {
-        if (err) {
+      resources.load(`levels/ch1_3/${levelId}`, JsonAsset, (err: Error | null, asset: JsonAsset | null) => {
+        if (err || !asset) {
           console.error(`Failed to load level config: ${levelId}`, err);
-          resolve(null);
+          resolve(undefined);
           return;
         }
         resolve(asset.json as LevelConfig);

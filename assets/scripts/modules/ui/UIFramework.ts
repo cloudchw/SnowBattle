@@ -1,8 +1,7 @@
-import { _decorator, Component, Label, Node, Color } from 'cc';
+import { _decorator, Component, Label } from 'cc';
 import { LevelState } from '../level/levelReducer';
 import { ScoringState } from '../scoring/scoreReducer';
 import { WeatherType } from '../../types/weather';
-import { PowerUpType } from '../../types/powerup';
 
 const { ccclass, property } = _decorator;
 

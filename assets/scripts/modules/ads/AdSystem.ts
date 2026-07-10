@@ -3,13 +3,28 @@
  * 封装微信小游戏的激励视频与插屏广告。
  * 无节点/资源依赖，不挂 Component。
  */
+
+/** wx.createRewardedVideoAd 返回句柄的最小形状。 */
+interface RewardedVideoAd {
+  onClose(cb: (res: { isEnded?: boolean }) => void): void;
+  offClose(cb: (res: { isEnded?: boolean }) => void): void;
+  show(): Promise<void>;
+  load(): Promise<void>;
+}
+
+/** wx.createInterstitialAd 返回句柄的最小形状。 */
+interface InterstitialAd {
+  show(): Promise<void>;
+  load(): Promise<void>;
+}
+
 export class AdSystem {
   private static instance: AdSystem;
 
   private rewardedAdUnitId: string = '';
   private interstitialAdUnitId: string = '';
-  private rewardedAd: any = null;
-  private interstitialAd: any = null;
+  private rewardedAd: RewardedVideoAd | null = null;
+  private interstitialAd: InterstitialAd | null = null;
 
   static getInstance(): AdSystem {
     if (!AdSystem.instance) {
@@ -28,10 +43,10 @@ export class AdSystem {
   private ensureAds(): void {
     if (typeof wx === 'undefined') return;
     if (this.rewardedAdUnitId && !this.rewardedAd) {
-      this.rewardedAd = (wx as any).createRewardedVideoAd({ adUnitId: this.rewardedAdUnitId });
+      this.rewardedAd = wx.createRewardedVideoAd({ adUnitId: this.rewardedAdUnitId });
     }
     if (this.interstitialAdUnitId && !this.interstitialAd) {
-      this.interstitialAd = (wx as any).createInterstitialAd({ adUnitId: this.interstitialAdUnitId });
+      this.interstitialAd = wx.createInterstitialAd({ adUnitId: this.interstitialAdUnitId });
     }
   }
 
@@ -47,9 +62,9 @@ export class AdSystem {
         return;
       }
       const ad = this.rewardedAd;
-      const onClose = (res: any) => {
+      const onClose = (res: { isEnded?: boolean }) => {
         ad.offClose(onClose);
-        resolve(!!(res && res.isEnded));
+        resolve(!!res.isEnded);
       };
       ad.onClose(onClose);
       ad.show().catch(() => {
@@ -65,8 +80,9 @@ export class AdSystem {
 
   showInterstitialAd(): void {
     if (typeof wx === 'undefined' || !this.interstitialAd) return;
-    this.interstitialAd.show().catch(() => {
-      this.interstitialAd.load();
+    const ad = this.interstitialAd;
+    ad.show().catch(() => {
+      ad.load();
     });
   }
 }

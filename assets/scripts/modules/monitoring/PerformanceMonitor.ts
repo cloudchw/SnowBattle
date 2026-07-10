@@ -45,8 +45,8 @@ export class PerformanceMonitor extends Component {
   }
 
   private readMemoryUsage(): number {
-    if (typeof wx !== 'undefined' && (wx as any).getPerformance) {
-      const memory = (wx as any).getPerformance().memory;
+    if (typeof wx !== 'undefined' && wx.getPerformance) {
+      const memory = wx.getPerformance().memory;
       if (memory) {
         return memory.usedJSHeapSize / 1024 / 1024; // -> MB
       }
